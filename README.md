@@ -5,5 +5,5 @@ Additional Symfony validator constraints: PhpCallable, RemoteFileExists, Strtoti
 ## Installation
 
 ```bash
-composer require codraw/
+composer require codraw/validator
 ```
