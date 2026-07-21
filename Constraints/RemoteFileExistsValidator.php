@@ -5,6 +5,7 @@ namespace Draw\Component\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 class RemoteFileExistsValidator extends ConstraintValidator
 {
@@ -12,6 +13,14 @@ class RemoteFileExistsValidator extends ConstraintValidator
     {
         if (!$constraint instanceof RemoteFileExists) {
             throw new UnexpectedTypeException($constraint, RemoteFileExists::class);
+        }
+
+        if (null === $value) {
+            return;
+        }
+
+        if (!\is_scalar($value) && !$value instanceof \Stringable) {
+            throw new UnexpectedValueException($value, 'string');
         }
 
         if (!$this->remoteFileExists($value)) {

@@ -17,6 +17,6 @@ class Strtotime extends PhpCallable
     public function __construct($options = null)
     {
         parent::__construct(['callable' => $this->callable] + (array) $options);
-        $this->returnValueConstraint = new Type(['type' => 'int']);
+        $this->returnValueConstraint ??= new Type(['type' => 'int']);
     }
 }

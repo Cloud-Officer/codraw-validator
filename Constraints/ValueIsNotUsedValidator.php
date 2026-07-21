@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class ValueIsNotUsedValidator extends ConstraintValidator
@@ -26,7 +27,10 @@ class ValueIsNotUsedValidator extends ConstraintValidator
 
         $manager = $this->managerRegistry->getManagerForClass($constraint->entityClass);
 
-        \assert($manager instanceof EntityManagerInterface);
+        if (!$manager instanceof EntityManagerInterface) {
+            throw new ConstraintDefinitionException(\sprintf('The class "%s" is not managed by a doctrine ORM entity manager.', $constraint->entityClass));
+        }
+
         $queryBuilder = $manager->createQueryBuilder()
             ->from($constraint->entityClass, 'root')
             ->andWhere('root.'.$constraint->field.' = :value')
